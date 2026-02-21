@@ -7,6 +7,8 @@ import se.edu.streamdemo.task.Task;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import static java.util.stream.Collectors.toList;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -19,11 +21,15 @@ public class Main {
         printDataUsingStreams(tasksData);
 
         System.out.println("Printing deadlines ...");
-//        printDeadlines(tasksData);
+
         printDeadlineUsingStreams(tasksData);
 
         System.out.println("Total number of deadlines: (streams)" + countDeadlinesUsingStreams(tasksData));
         System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
+
+        System.out.println();
+        ArrayList<Task> filteredList = filterList(tasksData, "11");
+        printAllData(filteredList);
 
     }
 
@@ -68,6 +74,13 @@ public class Main {
         }
     }
 
+    public static ArrayList<Task> filterList(ArrayList<Task> tasks, String filterString) {
+        ArrayList<Task> filteredList = (ArrayList<Task>) tasks.stream()
+                .filter((t) -> t.getDescription().contains(filterString))
+                .collect(toList());
+        return filteredList;
+    }
+    
     private static int countDeadlinesUsingStreams(ArrayList<Task> tasks) {
         int count = (int)tasks.stream()
                 .filter(((Task t) -> t instanceof Deadline))
